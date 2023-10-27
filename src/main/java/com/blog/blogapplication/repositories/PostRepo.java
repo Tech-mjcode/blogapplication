@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.blog.blogapplication.entities.Category;
 import com.blog.blogapplication.entities.Post;
 import com.blog.blogapplication.entities.User;
+import java.util.List;
+
 
 public interface PostRepo extends JpaRepository<Post,Integer>{
     
@@ -15,4 +17,6 @@ public interface PostRepo extends JpaRepository<Post,Integer>{
     
     //find all post by particular category
     Page<Post> findByCategory(Category category,Pageable p);
+
+    List<Post> findByTitleContaining(String keyword);
 }

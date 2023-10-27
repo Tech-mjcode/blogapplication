@@ -83,7 +83,8 @@ public class PostServiceImpl implements PostService{
 
         if(sortDir.equalsIgnoreCase("desc"))
             sort = Sort.by(sortBy).descending();
-        else
+        
+else
             sort = Sort.by(sortBy);
         
         Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
@@ -148,9 +149,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponse searchPost(String keyword) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchPost'");
+    public List<PostDto> searchPost(String keyword) {
+        List<Post> allPost = postRepo.findByTitleContaining(keyword);
+        List<PostDto> allPostDto = allPost.stream().map((p)->modelMapper.map(p, PostDto.class)).collect(Collectors.toList());
+        return allPostDto;
     }
     
 }

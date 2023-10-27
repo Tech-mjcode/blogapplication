@@ -1,5 +1,7 @@
 package com.blog.blogapplication.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,4 +78,8 @@ public class PostController {
         return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
     }
     
+    @GetMapping("/posts/search/{keyword}")
+    public ResponseEntity<List<PostDto>> search(@PathVariable String keyword){
+        return new ResponseEntity<>(postService.searchPost(keyword),HttpStatus.OK);
+    } 
 }
