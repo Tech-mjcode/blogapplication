@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDto {
+    private Integer id;
     @Size(min = 5,message = "Post Title must be minimum 5 character")
     private String title;
     @Size(min = 5,message = "Post content must be minimum 5 character")

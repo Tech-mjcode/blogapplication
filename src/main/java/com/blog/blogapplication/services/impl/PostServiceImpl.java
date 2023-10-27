@@ -49,15 +49,20 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDto updatePost(PostDto newPostDto, Integer postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePost'");
+    public PostDto updatePost(PostDto newPostDto, Integer postId, Integer categoryId) {
+        Category category = categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "id", categoryId));
+        Post post = postRepo.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post", "id", postId));
+        post.setTitle(newPostDto.getTitle());
+        post.setContent(newPostDto.getContent());
+        post.setCategory(category);
+
+        return modelMapper.map(postRepo.save(post), PostDto.class);
     }
 
     @Override
     public void deletePost(Integer postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePost'");
+        Post post = postRepo.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post", "Id", postId));
+        postRepo.delete(post);
     }
 
     @Override
