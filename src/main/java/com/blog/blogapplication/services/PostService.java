@@ -12,7 +12,7 @@ public interface PostService {
     
     void deletePost(Integer postId);
     PostDto getSinglePost(Integer postId);
-    List<PostDto> getAllPost();
+    List<PostDto> getAllPost(Integer pageNumber , Integer pageSize);
     List<PostDto> getAllPostByUser(Integer userId);
     List<PostDto> getAllPostByCategory(Integer categoryId);
     List<PostDto> searchPost(String keyword);
