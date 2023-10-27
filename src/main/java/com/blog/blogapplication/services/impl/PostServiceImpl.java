@@ -16,6 +16,7 @@ import com.blog.blogapplication.entities.Post;
 import com.blog.blogapplication.entities.User;
 import com.blog.blogapplication.exception.ResourceNotFoundException;
 import com.blog.blogapplication.payloads.PostDto;
+import com.blog.blogapplication.payloads.PostResponse;
 import com.blog.blogapplication.repositories.CategoryRepo;
 import com.blog.blogapplication.repositories.PostRepo;
 import com.blog.blogapplication.repositories.UserRepo;
@@ -75,34 +76,70 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDto> getAllPost(Integer pageNumber , Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber , Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Post> findAll = postRepo.findAll(pageable);
-        List<Post> content = findAll.getContent();
+        Page<Post> findAllPostByPage = postRepo.findAll(pageable);
+        List<Post> content = findAllPostByPage.getContent();
         List<PostDto> allPostDto = content.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
-        return allPostDto;
+        
+        
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(allPostDto);
+        postResponse.setPageNumber(findAllPostByPage.getNumber());
+        postResponse.setPageSize(findAllPostByPage.getSize());
+        postResponse.setTotalRow(findAllPostByPage.getTotalElements());
+        postResponse.setTotalPage(findAllPostByPage.getTotalPages());
+        postResponse.setFirstPage(findAllPostByPage.isFirst());
+        postResponse.setLastPage(findAllPostByPage.isLast());
+        postResponse.setEmpty(findAllPostByPage.isEmpty());
+        return postResponse;
     }
 
     @Override
-    public List<PostDto> getAllPostByUser(Integer userId) {
+    public PostResponse getAllPostByUser(Integer userId , Integer pageNumber, Integer pageSize) {
         User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
-        List<Post> findByUser = postRepo.findByUser(user);
-
-        List<PostDto> allPostDto = findByUser.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
-        return allPostDto;
+        
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        
+        Page<Post> pageOfPost = postRepo.findByUser(user, pageable);
+        List<PostDto> allPostDto = pageOfPost.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
+        
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(allPostDto);
+        postResponse.setPageNumber(pageOfPost.getNumber());
+        postResponse.setPageSize(pageOfPost.getSize());
+        postResponse.setTotalRow(pageOfPost.getTotalElements());
+        postResponse.setTotalPage(pageOfPost.getTotalPages());
+        postResponse.setFirstPage(pageOfPost.isFirst());
+        postResponse.setLastPage(pageOfPost.isLast());
+        postResponse.setEmpty(pageOfPost.isEmpty());
+        
+        return postResponse;
     }
 
     @Override
-    public List<PostDto> getAllPostByCategory(Integer categoryId) {
+    public PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize) {
         Category category = categoryRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "id", categoryId));
-        List<Post> findByCategory = postRepo.findByCategory(category);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
 
-        List<PostDto> allListPostDto = findByCategory.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
-        return allListPostDto;
+        Page<Post> findPostPage = postRepo.findByCategory(category,pageable);
+        List<PostDto> allListPostDto = findPostPage.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
+        
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(allListPostDto);
+        postResponse.setPageNumber(findPostPage.getNumber());
+        postResponse.setPageSize(findPostPage.getSize());
+        postResponse.setTotalPage(findPostPage.getTotalPages());
+        postResponse.setTotalRow(findPostPage.getTotalElements());
+        postResponse.setEmpty(findPostPage.isEmpty());
+        postResponse.setFirstPage(findPostPage.isFirst());
+        postResponse.setLastPage(findPostPage.isLast());
+        
+        return postResponse;
     }
 
     @Override
-    public List<PostDto> searchPost(String keyword) {
+    public PostResponse searchPost(String keyword) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'searchPost'");
     }
