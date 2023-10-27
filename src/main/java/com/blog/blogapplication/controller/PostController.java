@@ -1,7 +1,5 @@
 package com.blog.blogapplication.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +34,12 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<PostResponse> getAllPost(
         @RequestParam(value = "pageNumber" , defaultValue = "0", required = false) Integer pageNumber,
-        @RequestParam(value = "pageSize" , defaultValue = "5" , required = false) Integer pageSize
+        @RequestParam(value = "pageSize" , defaultValue = "5" , required = false) Integer pageSize,
+        @RequestParam(value = "sortBy" , defaultValue = "postId" , required = false) String sortBy,
+        @RequestParam(value = "sortDirction", defaultValue = "asc" , required = false) String sortDirection
     ){
 
-        PostResponse allPost = postService.getAllPost(pageNumber, pageSize);
+        PostResponse allPost = postService.getAllPost(pageNumber, pageSize,sortBy,sortDirection);
         return new ResponseEntity<PostResponse>(allPost,HttpStatus.OK);
     }
 

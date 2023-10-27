@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.blog.blogapplication.entities.Category;
@@ -76,8 +77,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponse getAllPost(Integer pageNumber , Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public PostResponse getAllPost(Integer pageNumber , Integer pageSize , String sortBy , String sortDir) {
+        
+        Sort sort = null;
+
+        if(sortDir.equalsIgnoreCase("desc"))
+            sort = Sort.by(sortBy).descending();
+        else
+            sort = Sort.by(sortBy);
+        
+        Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
         Page<Post> findAllPostByPage = postRepo.findAll(pageable);
         List<Post> content = findAllPostByPage.getContent();
         List<PostDto> allPostDto = content.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
