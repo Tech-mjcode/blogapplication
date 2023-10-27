@@ -8,9 +8,7 @@ import com.blog.blogapplication.payloads.PostResponse;
 public interface PostService {
     
     PostDto createPost(PostDto postDto,Integer userId,Integer categoryId);
-    PostDto updatePost(PostDto newPostDto, Integer postId , Integer categoryId);
-    
-    
+    PostDto updatePost(PostDto newPostDto, Integer postId);
     void deletePost(Integer postId);
     PostDto getSinglePost(Integer postId);
     PostResponse getAllPost(Integer pageNumber , Integer pageSize,String sortBy , String SortDir);
