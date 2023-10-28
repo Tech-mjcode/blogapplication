@@ -88,9 +88,11 @@ else
         Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
         Page<Post> findAllPostByPage = postRepo.findAll(pageable);
         List<Post> content = findAllPostByPage.getContent();
+       
+
+
         List<PostDto> allPostDto = content.stream().map((p)-> modelMapper.map(p,PostDto.class)).collect(Collectors.toList());
-        
-        
+
         PostResponse postResponse = new PostResponse();
         postResponse.setContent(allPostDto);
         postResponse.setPageNumber(findAllPostByPage.getNumber());

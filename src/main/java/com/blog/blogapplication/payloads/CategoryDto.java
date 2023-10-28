@@ -14,4 +14,6 @@ public class CategoryDto {
 
     @Size(min = 5 , message = "Category Description minimum 5 character")
     private String categoryDescription;
+
+    
 }
