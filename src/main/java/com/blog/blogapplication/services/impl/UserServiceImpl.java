@@ -1,15 +1,18 @@
 package com.blog.blogapplication.services.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.blog.blogapplication.entities.Role;
 import com.blog.blogapplication.entities.User;
 import com.blog.blogapplication.exception.ResourceNotFoundException;
 import com.blog.blogapplication.payloads.UserDto;
+import com.blog.blogapplication.repositories.RoleRepo;
 import com.blog.blogapplication.repositories.UserRepo;
 import com.blog.blogapplication.services.UserService;
 
@@ -21,10 +24,15 @@ public class UserServiceImpl implements UserService{
     private UserRepo userRepo;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired 
+    RoleRepo roleRepo;
+    
+    
     @Override
     public UserDto createUser(UserDto userDto) {
-
+        Role role = roleRepo.findByName("ROLE_USER");
         User user = dtoToUser(userDto);
+        user.setRoles(Set.of(role));
         User saveUser = this.userRepo.save(user);
         return userToDto(saveUser);
     }
