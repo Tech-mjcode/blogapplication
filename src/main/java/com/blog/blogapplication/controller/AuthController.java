@@ -20,8 +20,10 @@ import com.blog.blogapplication.entities.User;
 import com.blog.blogapplication.exception.ApiException;
 import com.blog.blogapplication.payloads.JwtAuthRequest;
 import com.blog.blogapplication.payloads.JwtAuthResponse;
+import com.blog.blogapplication.payloads.UserDto;
 import com.blog.blogapplication.repositories.UserRepo;
 import com.blog.blogapplication.security.JwtTokenHelper;
+import com.blog.blogapplication.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth/")
@@ -34,7 +36,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request ){
         
@@ -55,8 +57,11 @@ public class AuthController {
             System.out.println("invalid login detatils");
             throw new ApiException("invalid username or password");
         }
-        
-       
-        
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+        UserDto registerUser = userService.registerUser(userDto);
+        return new ResponseEntity<>(registerUser,HttpStatus.CREATED);
     }
 }
